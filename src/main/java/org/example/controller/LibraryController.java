@@ -52,11 +52,39 @@ public class LibraryController {
                 case 6:
                     findByIsbn();
                     break;
+                case 7:
+                    findByCategory();
+                    break;
                 case 0:
                     clearScreen();
                     System.out.println("감사합니다.");
                     System.out.println("안녕히 가세요.");
                     return;
+            }
+        }
+    }
+
+    private void findByCategory() {
+        clearScreen();
+        sc.nextLine();
+        System.out.print("카테고리를 입력해주세요: ");
+        List<Library> libraryList = libraryService.findByCategory(sc.nextLine());
+        if (libraryList.size() == 0)
+            libraryNotFound();
+        else {
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────");
+            System.out.printf(" %-3s %-25s %-15s %-8s %-5s %-4s \n", "번호", "책 이름", "저자", "출판사", "출시년도", "권수");
+            for (Library library : libraryList) {
+                System.out.printf(" %-4s %-25s %-15s %-8s %-8s %-4s \n", library.getId(), library.getName(), library.getAuthor(), library.getPublisher(), library.getReleaseYear() + "년", library.getCount() + "권");
+            }
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────");
+
+            System.out.print("상세 조회하실 책 번호(메뉴 이동은 -1): ");
+            try {
+                long id = sc.nextLong();
+                if (id != -1)
+                    findById(id);
+            } catch (Exception ignored) {
             }
         }
     }
@@ -71,6 +99,7 @@ public class LibraryController {
         System.out.println("       4. 저자로 검색       ");
         System.out.println("       5. 출판사로 검색      ");
         System.out.println("       6. ISBN으로 검색      ");
+        System.out.println("       7. 카테고리로 검색      ");
         System.out.println("       0. 끝내기         ");
         System.out.println("                           ");
         System.out.println("────────────────────────────────");
@@ -119,32 +148,23 @@ public class LibraryController {
         clearScreen();
         sc.nextLine();
         System.out.print("도서의 제목을 입력해주세요: ");
-        String name = sc.nextLine();
-        Library library = libraryService.findByName(name);
-        if (library == null)
+        List<Library> libraryList = libraryService.findByName(sc.nextLine());
+        if (libraryList.size() == 0)
             libraryNotFound();
         else {
-            detailInfo(library);
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────");
+            System.out.printf(" %-3s %-25s %-15s %-8s %-5s %-4s %n", "번호", "책 이름", "저자", "출판사", "출시년도", "권수");
+            for (Library library : libraryList) {
+                System.out.printf(" %-4s %-25s %-15s %-8s %-7s %-4s %n", library.getId(), library.getName(), library.getAuthor(), library.getPublisher(), library.getReleaseYear() + "년", library.getCount() + "권");
+            }
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────");
 
-            System.out.print("[1] 메뉴   [2] 이미지   [3] 수량 증가   [4] 수량 감소   [5] 수정   [6] 삭제 ");
-            switch (sc.nextInt()) {
-                case 1:
-                    return;
-                case 2:
-                    getImage(library.getImage());
-                    break;
-                case 3:
-                    countPlus(library.getId());
-                    break;
-                case 4:
-                    countMinus(library.getId());
-                    break;
-                case 5:
-                    updateForm(library.getId());
-                    break;
-                case 6:
-                    deleteLibrary(library.getId());
-                    break;
+            System.out.print("상세 조회하실 책 번호(메뉴 이동은 -1): ");
+            try {
+                long id = sc.nextLong();
+                if (id != -1)
+                    findById(id);
+            } catch (Exception ignored) {
             }
         }
     }
@@ -261,12 +281,12 @@ public class LibraryController {
         if (libraryList.size() == 0)
             libraryNotFound();
         else {
-            System.out.println("──────────────────────────────────────────────────────────────────────────");
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────");
             System.out.printf(" %-3s %-25s %-15s %-8s %-5s %-4s %n", "번호", "책 이름", "저자", "출판사", "출시년도", "권수");
             for (Library library : libraryList) {
-                System.out.printf(" %-4s %-25s %-15s %-8s %-7s %-4s %n", library.getId(), library.getName(), library.getAuthor(), library.getPublisher(), library.getReleaseYear() + "년" + library.getCount() + "권");
+                System.out.printf(" %-4s %-25s %-15s %-8s %-7s %-4s %n", library.getId(), library.getName(), library.getAuthor(), library.getPublisher(), library.getReleaseYear() + "년", library.getCount() + "권");
             }
-            System.out.println("──────────────────────────────────────────────────────────────────────────");
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────");
 
             System.out.print("상세 조회하실 책 번호(메뉴 이동은 -1): ");
             try {
@@ -328,12 +348,12 @@ public class LibraryController {
         if (libraryList.size() == 0)
             libraryNotFound();
         else {
-            System.out.println("──────────────────────────────────────────────────────────────────────────");
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────");
             System.out.printf(" %-3s %-25s %-15s %-8s %-5s %-4s %n", "번호", "책 이름", "저자", "출판사", "출시년도", "권수");
             for (Library library : libraryList) {
                 System.out.printf(" %-4s %-25s %-15s %-7s %-8s %-4s %n", library.getId(), library.getName(), library.getAuthor(), library.getPublisher(), library.getReleaseYear() + "년", library.getCount() + "권");
             }
-            System.out.println("──────────────────────────────────────────────────────────────────────────");
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────");
 
 
             System.out.print("[1] 메뉴   [2] 최신순   [3] 이름 정렬   [4] 상세 조회 ");
@@ -402,8 +422,6 @@ public class LibraryController {
                 System.out.println("수정하였습니다.\n 아무 키나 입력하세요.");
                 sc.nextLine();
                 break;
-            case 4:
-                return;
         }
     }
 

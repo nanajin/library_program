@@ -11,7 +11,7 @@ public interface LibraryRepository {
 
     Library findById(Long id);
 
-    Library findByName(String name);
+    List<Library> findByName(String name);
 
     List<Library> findByAuthor(String author);
 

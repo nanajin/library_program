@@ -24,7 +24,7 @@ public class LibraryService {
         return libraryRepository.findById(id);
     }
 
-    public Library findByName(String name) {
+    public List<Library> findByName(String name) {
         return libraryRepository.findByName(name);
     }
 

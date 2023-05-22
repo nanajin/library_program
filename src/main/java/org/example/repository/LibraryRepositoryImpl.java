@@ -38,13 +38,9 @@ public class LibraryRepositoryImpl implements LibraryRepository {
     }
 
     @Override
-    public Library findByName(String name) {
+    public List<Library> findByName(String name) {
         String sql = "select * from library where name like '%" + name + "%'";
-        try {
-            return executeQuery(sql).get(0);
-        } catch (Exception e) {
-            return null;
-        }
+        return executeQuery(sql);
     }
 
     @Override
